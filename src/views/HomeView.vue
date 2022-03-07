@@ -1,18 +1,23 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div class="container">
+    <div class="home" v-if="userData"></div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-
 export default {
   name: "HomeView",
-  components: {
-    HelloWorld,
-  },
 };
 </script>
+
+<style lang="scss">
+.home {
+  padding: 2rem 0;
+
+  @include media-query {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-gap: 10px;
+  }
+}
+</style>
