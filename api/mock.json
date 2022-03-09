@@ -5,7 +5,12 @@
       "id": "123",
       "joined_date": "2021-03-25",
       "profile_picture": "https://randomuser.me/api/portraits/lego/3.jpg",
-      "bio": "Lorem ipsum dolor sit amet"
+      "bio": "Lorem ipsum dolor sit amet",
+      "following": [
+        "001",
+        "003",
+        "004"
+      ]
     },
   
     "users": [
@@ -35,6 +40,13 @@
         "id": "004",
         "joined_date": "2018-11-10",
         "profile_picture": "https://randomuser.me/api/portraits/lego/5.jpg"
+      },
+
+      {
+        "name": "Doe Chan",
+        "id": "004",
+        "joined_date": "2021-01-01",
+        "profile_picture": "https://randomuser.me/api/portraits/lego/5.jpg"
       }
     ],
 
@@ -60,13 +72,13 @@
       {
         "post_id": "ccc",
         "content": "Curabitur sed felis eget neque bibendum blandit. Etiam venenatis sagittis orci. Morbi neque ex, elementum vel ultrices sit amet, laoreet vitae velit. Vivamus bibendum mollis quam quis egestas. Fusce mollis massa gravida vehicula commodo. Suspendisse dignissim bibendum risus in mollis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae",
-        "user_id": "003"
+        "user_id": "004"
       },
 
       {
         "post_id": "ddd",
         "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vulputate libero et nisl condimentum efficitur. Mauris placerat elit a arcu iaculis malesuada. Fusce accumsan finibus elit vel finibus.",
-        "user_id": "004"
+        "user_id": "005"
       }
     ]
   }
