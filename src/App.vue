@@ -24,8 +24,8 @@ body {
 
 .main {
 	background: $color-mercury;
-	width: 100vw;
 	min-height: 100vh;
 	color: $color-blue-dianne;
+	overflow: hidden;
 }
 </style>

@@ -1,7 +1,22 @@
 <template>
-	<div class="feed" v-if="userData">
+	<div class="feed__toggler">
+		<toggler-checkbox
+			v-model="onlyShowFollowedPosts"
+			label="Show only Following users"
+		/>
+	</div>
+
+	<div class="feed" v-if="userData && !onlyShowFollowedPosts">
 		<post-item
 			v-for="post in joinUserAndPost(userData.posts)"
+			:key="post.post_id"
+			:post="post"
+		/>
+	</div>
+
+	<div class="feed" v-else-if="userData && onlyShowFollowedPosts">
+		<post-item
+			v-for="post in joinUserAndPost(postsCurrentUserFollowing)"
 			:key="post.post_id"
 			:post="post"
 		/>
@@ -10,12 +25,14 @@
 
 <script>
 import PostItem from "@/components/commons/PostItem";
+import TogglerCheckbox from "@/components/commons/TogglerCheckbox";
 
 export default {
 	name: "HomeFeed",
 
 	components: {
 		PostItem,
+		TogglerCheckbox,
 	},
 
 	props: {
@@ -52,8 +69,6 @@ export default {
 					}
 				});
 			});
-
-			console.log(postsWithUserData);
 
 			return postsWithUserData;
 		},
