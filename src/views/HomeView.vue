@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="home">
 			<div class="home__feed">
-				<home-feed :userData="userData" />
+				<home-feed />
 			</div>
 		</div>
 	</div>
@@ -10,25 +10,12 @@
 
 <script>
 import HomeFeed from "@/components/core/HomeFeed";
-import axios from "axios";
-import { ref } from "vue";
 
 export default {
 	name: "HomeView",
 
 	components: {
 		HomeFeed,
-	},
-
-	setup() {
-		const url = "http://localhost:3000/data";
-		const userData = ref(null);
-
-		axios.get(url).then(({ data }) => {
-			userData.value = data;
-		});
-
-		return { userData };
 	},
 };
 </script>

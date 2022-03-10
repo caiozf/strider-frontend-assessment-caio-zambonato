@@ -1,31 +1,36 @@
 <template>
-	<div class="feed__toggler">
-		<toggler-checkbox
-			v-model="onlyShowFollowedPosts"
-			label="Show only Following users"
-		/>
-	</div>
+	<div v-if="posts">
+		<div class="feed__post">
+			<new-post @submit="handlePostSubmit" />
+		</div>
 
-	<div class="feed" v-if="userData && !onlyShowFollowedPosts">
-		<post-item
-			v-for="post in joinUserAndPost(userData.posts)"
-			:key="post.post_id"
-			:post="post"
-		/>
-	</div>
+		<div class="feed__toggler">
+			<toggler-checkbox
+				v-model="onlyShowFollowedPosts"
+				label="Show only Following users"
+			/>
+		</div>
 
-	<div class="feed" v-else-if="userData && onlyShowFollowedPosts">
-		<post-item
-			v-for="post in joinUserAndPost(postsCurrentUserFollowing)"
-			:key="post.post_id"
-			:post="post"
-		/>
+		<div class="feed" v-if="posts && !onlyShowFollowedPosts">
+			<post-item v-for="post in posts" :key="post.post_id" :post="post" />
+		</div>
+
+		<div class="feed" v-else-if="posts && onlyShowFollowedPosts">
+			<post-item
+				v-for="post in postsCurrentUserFollowing"
+				:key="post.post_id"
+				:post="post"
+			/>
+		</div>
 	</div>
 </template>
 
 <script>
+import axios from "axios";
 import PostItem from "@/components/commons/PostItem";
 import TogglerCheckbox from "@/components/commons/TogglerCheckbox";
+import NewPost from "@/components/commons/NewPost";
+import randomizer from "@/mixins/randomizer";
 
 export default {
 	name: "HomeFeed",
@@ -33,35 +38,85 @@ export default {
 	components: {
 		PostItem,
 		TogglerCheckbox,
+		NewPost,
 	},
 
-	props: {
-		userData: {
-			type: Object,
-			required: true,
-		},
-	},
+	mixins: [randomizer],
 
 	data() {
 		return {
+			currentUser: "",
+			posts: "",
+			users: "",
 			onlyShowFollowedPosts: false,
+			newPosts: [],
 		};
+	},
+
+	created() {
+		const url = "http://localhost:3000/data";
+
+		axios
+			.get(url)
+			.then(({ data }) => {
+				this.currentUser = data.current_user;
+				this.posts = this.joinUserAndPost(data.posts, data.users);
+				this.users = data.users;
+			})
+			.finally(() => {
+				this.retrieveSavedPosts();
+			});
 	},
 
 	computed: {
 		postsCurrentUserFollowing() {
-			return this.userData.posts.filter((post) =>
-				this.userData.current_user.following.includes(post.user_id)
+			return this.posts.filter((post) =>
+				this.currentUser.following.includes(post.user_id)
 			);
 		},
 	},
 
 	methods: {
-		joinUserAndPost(posts) {
+		handlePostSubmit(post) {
+			let payload = {
+				content: post,
+				id: this.randomizer(),
+				joined_date: this.currentUser.joined_date,
+				name: this.currentUser.name,
+				post_id: this.randomizer(),
+				profile_picture: this.currentUser.profile_picture,
+				user_id: this.randomizer(),
+			};
+
+			this.posts.splice(0, 0, payload);
+			this.saveNewPost(payload);
+		},
+
+		saveNewPost(post) {
+			this.newPosts.push(post);
+			let postsArray = JSON.stringify(this.newPosts);
+			localStorage.posts = postsArray;
+		},
+
+		retrieveSavedPosts() {
+			let newPosts = localStorage.posts;
+
+			if (!newPosts) {
+				return;
+			}
+
+			this.newPosts = JSON.parse(newPosts);
+
+			if (this.posts && this.newPosts) {
+				this.newPosts.forEach((newPost) => this.posts.unshift(newPost));
+			}
+		},
+
+		joinUserAndPost(posts, users) {
 			let postsWithUserData = [];
 
 			posts.map((post) => {
-				this.userData.users.map((user) => {
+				users.map((user) => {
 					if (user.id === post.user_id) {
 						Object.assign(post, user);
 

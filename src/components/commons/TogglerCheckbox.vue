@@ -1,37 +1,25 @@
 <template>
 	<input
 		type="checkbox"
-		v-bind="{ ...$attrs, onChange: updateValue }"
+		v-bind="{ ...$attrs }"
 		@change="$emit('update:modelValue', $event.target.checked)"
 		:id="uuid"
 		class="form-input"
 	/>
 
-	<span class="check-icon"></span>
-
 	<label :for="uuid" v-if="label">
+		<span class="check-icon"></span>
 		{{ label }}
 	</label>
 </template>
 
 <script>
+import inputField from "@/mixins/inputField";
+
 export default {
-	props: {
-		label: {
-			type: String,
-			default: "",
-		},
+	name: "TogglerCheckbox",
 
-		modelValue: {
-			type: Boolean,
-			default: false,
-		},
-
-		uuid: {
-			type: String,
-			default: Date.now(),
-		},
-	},
+	mixins: [inputField],
 };
 </script>
 
@@ -39,7 +27,7 @@ export default {
 input {
 	display: none;
 
-	&:checked ~ .check-icon {
+	&:checked ~ label > .check-icon {
 		&:after {
 			left: 20px;
 		}
