@@ -1,47 +1,53 @@
 <template>
 	<div v-if="posts">
-		<div class="feed__post">
+		<div class="feed__post" v-if="!loadingState">
 			<new-post @submit="handlePostSubmit" />
 		</div>
 
-		<div class="feed__toggler">
-			<toggler-checkbox
-				v-model="onlyShowFollowedPosts"
-				label="Show only Following users"
-			/>
+		<div v-if="loadingState">
+			<span class="spinner"></span>
 		</div>
 
-		<div class="feed" v-if="posts && !onlyShowFollowedPosts">
-			<router-link :to="{ name: 'ModalUser' }">
-				<post-item
-					@click="triggerModal(post.user_id)"
-					v-for="post in posts"
-					:key="post.post_id"
-					:post="post"
+		<div v-if="!loadingState">
+			<div class="feed__toggler">
+				<toggler-checkbox
+					v-model="onlyShowFollowedPosts"
+					label="Show only Following users"
 				/>
-			</router-link>
-		</div>
+			</div>
 
-		<router-view>
-			<div class="feed" v-if="posts && onlyShowFollowedPosts">
+			<div class="feed" v-if="posts && !onlyShowFollowedPosts">
 				<router-link :to="{ name: 'ModalUser' }">
 					<post-item
-						v-for="post in postsCurrentUserFollowing"
+						@click="triggerModal(post.user_id)"
+						v-for="post in posts"
 						:key="post.post_id"
 						:post="post"
-						@click="triggerModal(post.user_id)"
 					/>
 				</router-link>
 			</div>
 
-			<transition name="fade" appear>
-				<modal-user
-					@close="handleCloseModal"
-					v-if="userToDisplay"
-					:user="userToDisplay"
-				/>
-			</transition>
-		</router-view>
+			<router-view>
+				<div class="feed" v-if="posts && onlyShowFollowedPosts">
+					<router-link :to="{ name: 'ModalUser' }">
+						<post-item
+							v-for="post in postsCurrentUserFollowing"
+							:key="post.post_id"
+							:post="post"
+							@click="triggerModal(post.user_id)"
+						/>
+					</router-link>
+				</div>
+
+				<transition name="fade" appear>
+					<modal-user
+						@close="handleCloseModal"
+						v-if="userToDisplay"
+						:user="userToDisplay"
+					/>
+				</transition>
+			</router-view>
+		</div>
 	</div>
 </template>
 
@@ -73,6 +79,7 @@ export default {
 			onlyShowFollowedPosts: false,
 			newPosts: [],
 			userToDisplay: "",
+			loadingState: false,
 		};
 	},
 
@@ -87,6 +94,8 @@ export default {
 	created() {
 		const url = "http://localhost:3000/data";
 
+		this.loadingState = true;
+
 		axios
 			.get(url)
 			.then(({ data }) => {
@@ -94,7 +103,11 @@ export default {
 				this.posts = this.joinUserAndPost(data.posts, data.users);
 				this.users = data.users;
 			})
+			.catch((error) => {
+				this.$emit("showError", error);
+			})
 			.finally(() => {
+				this.loadingState = false;
 				this.retrieveSavedPosts();
 			});
 	},
