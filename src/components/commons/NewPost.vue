@@ -31,6 +31,7 @@ export default {
 	methods: {
 		submitPost() {
 			this.$emit("submit", this.post);
+			this.post = "";
 		},
 	},
 };
@@ -55,7 +56,7 @@ export default {
 			opacity: 0.5;
 		}
 
-		&:hover {
+		&:not(:disabled):hover {
 			background: $color-blue-dianne;
 		}
 	}

@@ -6,6 +6,9 @@
       "joined_date": "2021-03-25",
       "profile_picture": "https://randomuser.me/api/portraits/lego/3.jpg",
       "bio": "Lorem ipsum dolor sit amet",
+			"number_followers": "0",
+			"number_following": "3",
+			"number_posts": "0",
       "following": [
         "001",
         "003",
@@ -18,35 +21,50 @@
         "name": "John Doe",
         "id": "001",
         "joined_date": "2020-03-25",
-        "profile_picture": "https://randomuser.me/api/portraits/lego/1.jpg"
+        "profile_picture": "https://randomuser.me/api/portraits/lego/1.jpg",
+				"number_followers": "10",
+				"number_following": "33",
+				"number_posts": "5"
       },
 
       {
         "name": "James Doe",
         "id": "002",
         "joined_date": "2019-03-25",
-        "profile_picture": "https://randomuser.me/api/portraits/lego/5.jpg"
+        "profile_picture": "https://randomuser.me/api/portraits/lego/5.jpg",
+				"number_followers": "5",
+				"number_following": "20",
+				"number_posts": "5"
       },
 
       {
         "name": "Edgar Alan Doe",
         "id": "003",
         "joined_date": "2019-07-10",
-        "profile_picture": "https://randomuser.me/api/portraits/lego/1.jpg"
+        "profile_picture": "https://randomuser.me/api/portraits/lego/1.jpg",
+				"number_followers": "100000",
+				"number_following": "33",
+				"number_posts": "2"
       },
 
       {
         "name": "Doe Lennon",
         "id": "004",
         "joined_date": "2018-11-10",
-        "profile_picture": "https://randomuser.me/api/portraits/lego/5.jpg"
+        "profile_picture": "https://randomuser.me/api/portraits/lego/5.jpg",
+				"number_followers": "50",
+				"number_following": "33",
+				"number_posts": "0"
       },
 
       {
         "name": "Doe Chan",
         "id": "005",
         "joined_date": "2021-01-01",
-        "profile_picture": "https://randomuser.me/api/portraits/lego/5.jpg"
+        "profile_picture": "https://randomuser.me/api/portraits/lego/5.jpg",
+				"number_followers": "100000",
+				"number_following": "33",
+				"number_posts": "1"
       }
     ],
 

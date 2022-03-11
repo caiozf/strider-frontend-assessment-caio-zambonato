@@ -12,16 +12,36 @@
 		</div>
 
 		<div class="feed" v-if="posts && !onlyShowFollowedPosts">
-			<post-item v-for="post in posts" :key="post.post_id" :post="post" />
+			<router-link :to="{ name: 'ModalUser' }">
+				<post-item
+					@click="triggerModal(post.user_id)"
+					v-for="post in posts"
+					:key="post.post_id"
+					:post="post"
+				/>
+			</router-link>
 		</div>
 
-		<div class="feed" v-else-if="posts && onlyShowFollowedPosts">
-			<post-item
-				v-for="post in postsCurrentUserFollowing"
-				:key="post.post_id"
-				:post="post"
-			/>
-		</div>
+		<router-view>
+			<div class="feed" v-if="posts && onlyShowFollowedPosts">
+				<router-link :to="{ name: 'ModalUser' }">
+					<post-item
+						v-for="post in postsCurrentUserFollowing"
+						:key="post.post_id"
+						:post="post"
+						@click="triggerModal(post.user_id)"
+					/>
+				</router-link>
+			</div>
+
+			<transition name="fade" appear>
+				<modal-user
+					@close="handleCloseModal"
+					v-if="userToDisplay"
+					:user="userToDisplay"
+				/>
+			</transition>
+		</router-view>
 	</div>
 </template>
 
@@ -31,6 +51,7 @@ import PostItem from "@/components/commons/PostItem";
 import TogglerCheckbox from "@/components/commons/TogglerCheckbox";
 import NewPost from "@/components/commons/NewPost";
 import randomizer from "@/mixins/randomizer";
+import ModalUser from "@/components/commons/ModalUser";
 
 export default {
 	name: "HomeFeed",
@@ -39,6 +60,7 @@ export default {
 		PostItem,
 		TogglerCheckbox,
 		NewPost,
+		ModalUser,
 	},
 
 	mixins: [randomizer],
@@ -50,7 +72,16 @@ export default {
 			users: "",
 			onlyShowFollowedPosts: false,
 			newPosts: [],
+			userToDisplay: "",
 		};
+	},
+
+	computed: {
+		postsCurrentUserFollowing() {
+			return this.posts.filter((post) =>
+				this.currentUser.following.includes(post.user_id)
+			);
+		},
 	},
 
 	created() {
@@ -68,11 +99,13 @@ export default {
 			});
 	},
 
-	computed: {
-		postsCurrentUserFollowing() {
-			return this.posts.filter((post) =>
-				this.currentUser.following.includes(post.user_id)
-			);
+	watch: {
+		onlyShowFollowedPosts(value) {
+			if (value) {
+				this.$router.push({ name: "Following" });
+			} else {
+				this.$router.push({ name: "home" });
+			}
 		},
 	},
 
@@ -85,7 +118,7 @@ export default {
 				name: this.currentUser.name,
 				post_id: this.randomizer(),
 				profile_picture: this.currentUser.profile_picture,
-				user_id: this.randomizer(),
+				user_id: this.currentUser.id,
 			};
 
 			this.posts.splice(0, 0, payload);
@@ -126,6 +159,20 @@ export default {
 			});
 
 			return postsWithUserData;
+		},
+
+		triggerModal(id) {
+			if (id == this.currentUser.id) {
+				this.userToDisplay = this.currentUser;
+				return;
+			}
+
+			let userRetrieved = this.users.find((user) => user.id == id);
+			this.userToDisplay = userRetrieved;
+		},
+
+		handleCloseModal() {
+			this.userToDisplay = "";
 		},
 	},
 };

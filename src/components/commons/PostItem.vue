@@ -58,9 +58,7 @@ export default {
 	}
 
 	&__avatar {
-		max-width: 50px;
-		border-radius: 50%;
-		overflow: hidden;
+		@extend .avatar;
 	}
 
 	small {

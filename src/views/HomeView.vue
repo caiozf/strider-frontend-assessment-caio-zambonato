@@ -22,7 +22,7 @@ export default {
 
 <style lang="scss">
 .home {
-	padding: 2rem 0;
+	padding: 2rem;
 
 	&__feed {
 		margin: 0 auto;
